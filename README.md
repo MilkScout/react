@@ -1,4 +1,4 @@
-## MilkScout - react - material-ui
+## MilkScout - react
 
 This package contains common components for react.
 
