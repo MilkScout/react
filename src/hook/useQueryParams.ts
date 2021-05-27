@@ -6,8 +6,8 @@ const QUERY_PARAM_MAP_FUNC: Record<QueryParamMapType, (value: string) => any> = 
   STRING: (value) => value,
 };
 
-export const useQueryParams = (mapper: QueryParamMap = {}): QueryParams => {
-  const response: QueryParams = {};
+export const useQueryParams = <T = QueryParams>(mapper: QueryParamMap = {}): T => {
+  const response: any = {};
   let { search } = window.location;
 
   if (search.startsWith('?')) {
