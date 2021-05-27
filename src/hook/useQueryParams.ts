@@ -20,7 +20,7 @@ export const useQueryParams = <T = QueryParams>(mapper: QueryParamMap = {}): T =
     .map((pair) => pair.split('='))
     .map((pair) => [decodeURIComponent(pair[0]), decodeURIComponent(pair[1])])
     .forEach(([queryKey, queryValue]) => {
-      const typeDefinition: QueryParamDefinition = mapper[queryKey] || 'STRING';
+      const typeDefinition: QueryParamDefinition = mapper[queryKey] || { type: 'STRING', isArray: false };
       const mappedValue = QUERY_PARAM_MAP_FUNC[typeDefinition.type](queryValue);
       if (typeof response[queryKey] === 'undefined' && typeDefinition.isArray) {
         response[queryKey] = [];
