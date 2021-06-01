@@ -7,7 +7,7 @@ export interface ErrorTransProps {
 
 export const ErrorTrans = ({ validator }: ErrorTransProps) => {
   if (process.env.NODE_ENV === 'production') {
-    return undefined;
+    return null;
   }
   return (
     <span style={{ display: 'none' }}>

@@ -4,3 +4,4 @@ export * from './getRandomId';
 export * from './getIdentityMap';
 export * from './openUrlInNewTab';
 export * from './dispatchCustomEvent';
+export * from './isValid';

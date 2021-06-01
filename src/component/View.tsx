@@ -10,7 +10,7 @@ export const View = ({ show, remove = false, children }: PropsWithChildren<ViewP
     return <>{children}</>;
   }
   if (remove) {
-    return undefined;
+    return null;
   }
   return <div style={{ display: 'none' }}>{children}</div>;
 };
