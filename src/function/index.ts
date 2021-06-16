@@ -5,3 +5,6 @@ export * from './getIdentityMap';
 export * from './openUrlInNewTab';
 export * from './dispatchCustomEvent';
 export * from './isValid';
+export * from './isValidChain';
+export * from './joinNode';
+export * from './compareNumber';
