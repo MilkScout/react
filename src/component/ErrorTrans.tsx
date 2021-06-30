@@ -1,16 +1,16 @@
 import React from 'react';
-import { getRandomId, isNotProduction } from '../function';
+import { getRandomId } from '../function';
 import { useEffectOnce, useMountedState } from '../hook';
 import { Validation } from '../interface';
-import { EVENT_REGISTER_ERROR } from '../variables';
-import { NotProduction } from './NotProduction';
+import { EVENT_REGISTER_ERROR, VALIDATION_CONFIG } from '../variables';
 
 export type ErrorEvent = CustomEvent<{ id: string; validator: Validation<unknown> }>;
 export const ErrorTrans = () => {
   const [errorMessages, setErrorMessages] = useMountedState<{ [key: string]: Validation<any> }>({});
 
-  useEffectOnce(
-    isNotProduction(() => {
+  // eslint-disable-next-line consistent-return
+  useEffectOnce(() => {
+    if (VALIDATION_CONFIG.addToDom) {
       const eventListener = (event: ErrorEvent) => {
         const { id, validator } = event.detail;
         setErrorMessages((c) => ({ ...c, [id]: validator }));
@@ -20,20 +20,22 @@ export const ErrorTrans = () => {
       return () => {
         window.removeEventListener<any>(EVENT_REGISTER_ERROR, eventListener);
       };
-    }),
-  );
+    }
+  });
 
   return (
-    <NotProduction>
-      <div style={{ display: 'none' }}>
-        {Object.entries(errorMessages).map(([id, validator]) => (
-          <div key={id}>
-            {Object.values(validator).flatMap((chain) =>
-              chain.map((p) => <div key={`error-message-${getRandomId()}`}>{p.message}</div>),
-            )}
-          </div>
-        ))}
-      </div>
-    </NotProduction>
+    <>
+      {VALIDATION_CONFIG.addToDom && (
+        <div style={{ display: 'none' }}>
+          {Object.entries(errorMessages).map(([id, validator]) => (
+            <div key={id}>
+              {Object.values(validator).flatMap((chain) =>
+                chain.map((p) => <div key={`error-message-${getRandomId()}`}>{p.message}</div>),
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </>
   );
 };

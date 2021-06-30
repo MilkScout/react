@@ -2,9 +2,9 @@
 import { ReactNode, useCallback } from 'react';
 import { useMountedState } from './useMountedState';
 import { ErrorMessage, Validation, ValidationError } from '../interface';
-import { getRandomId, isNotProduction } from '../function';
+import { getRandomId } from '../function';
 import { useEffectOnce } from './useEffectOnce';
-import { EVENT_REGISTER_ERROR } from '../variables';
+import { EVENT_REGISTER_ERROR, VALIDATION_CONFIG } from '../variables';
 
 const getDefaultError = <T>(validator: Validation<T>, propertyNames: Array<string>): ValidationError<T> =>
   Object.keys(validator)
@@ -115,11 +115,11 @@ export const useFormValidation = <T>(validator: Validation<T>) => {
     setErrorState(getDefaultError<T>(validator, Object.keys(validator)));
   }, [setErrorState, validator]);
 
-  useEffectOnce(
-    isNotProduction(() => {
+  useEffectOnce(() => {
+    if (VALIDATION_CONFIG.addToDom) {
       window.dispatchEvent(new CustomEvent(EVENT_REGISTER_ERROR, { detail: { id: validationId, validator } }));
-    }),
-  );
+    }
+  });
 
   return {
     validate,
