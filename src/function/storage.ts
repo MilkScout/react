@@ -1,6 +1,7 @@
-const TEST_KEY = '@MILKSCOUT_KEY';
-
 // https://github.com/capaj/localstorage-polyfill/blob/master/localStorage.js
+
+import { STORAGE_TEST_KEY } from '../variables';
+
 class SimulatedStorage implements Storage {
   private valuesMap = new Map();
 
@@ -41,9 +42,9 @@ class SimulatedStorage implements Storage {
 const selectLocalStorage = () => {
   try {
     // test if local storage is accessible
-    localStorage.setItem(TEST_KEY, '');
-    localStorage.getItem(TEST_KEY);
-    localStorage.removeItem(TEST_KEY);
+    localStorage.setItem(STORAGE_TEST_KEY, '');
+    localStorage.getItem(STORAGE_TEST_KEY);
+    localStorage.removeItem(STORAGE_TEST_KEY);
     return localStorage;
   } catch (e) {
     return new SimulatedStorage();
@@ -53,9 +54,9 @@ const selectLocalStorage = () => {
 const selectSessionStorage = () => {
   try {
     // test if session storage is accessible
-    sessionStorage.setItem(TEST_KEY, '');
-    sessionStorage.getItem(TEST_KEY);
-    sessionStorage.removeItem(TEST_KEY);
+    sessionStorage.setItem(STORAGE_TEST_KEY, '');
+    sessionStorage.getItem(STORAGE_TEST_KEY);
+    sessionStorage.removeItem(STORAGE_TEST_KEY);
     return sessionStorage;
   } catch (e) {
     return new SimulatedStorage();

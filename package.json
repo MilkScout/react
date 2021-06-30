@@ -1,6 +1,6 @@
 {
   "name": "@milkscout/react",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "index.js",
   "repository": "git@github.com:MilkScout/react.git",
   "author": "Michael Mannseicher <m.mansi1@gmx.net>",

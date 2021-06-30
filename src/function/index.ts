@@ -8,3 +8,5 @@ export * from './isValid';
 export * from './isValidChain';
 export * from './joinNode';
 export * from './compareNumber';
+export * from './isProduction';
+export * from './isNotProduction';

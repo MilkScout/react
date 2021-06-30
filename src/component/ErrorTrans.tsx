@@ -1,19 +1,39 @@
-import React, { ReactNode } from 'react';
-import { getRandomId } from '../function';
+import React from 'react';
+import { getRandomId, isNotProduction } from '../function';
+import { useEffectOnce, useMountedState } from '../hook';
+import { Validation } from '../interface';
+import { EVENT_REGISTER_ERROR } from '../variables';
+import { NotProduction } from './NotProduction';
 
-export interface ErrorTransProps {
-  validator: { [validators: string]: Array<{ message: ReactNode }> };
-}
+export type ErrorEvent = CustomEvent<{ id: string; validator: Validation<unknown> }>;
+export const ErrorTrans = () => {
+  const [errorMessages, setErrorMessages] = useMountedState<{ [key: string]: Validation<any> }>({});
 
-export const ErrorTrans = ({ validator }: ErrorTransProps) => {
-  if (process.env.NODE_ENV === 'production') {
-    return null;
-  }
+  useEffectOnce(
+    isNotProduction(() => {
+      const eventListener = (event: ErrorEvent) => {
+        const { id, validator } = event.detail;
+        setErrorMessages((c) => ({ ...c, [id]: validator }));
+      };
+
+      window.addEventListener<any>(EVENT_REGISTER_ERROR, eventListener);
+      return () => {
+        window.removeEventListener<any>(EVENT_REGISTER_ERROR, eventListener);
+      };
+    }),
+  );
+
   return (
-    <span style={{ display: 'none' }}>
-      {Object.values(validator).flatMap((chain) =>
-        chain.map((p) => <div key={`error-message-${getRandomId()}`}>{p.message}</div>),
-      )}
-    </span>
+    <NotProduction>
+      <div style={{ display: 'none' }}>
+        {Object.entries(errorMessages).map(([id, validator]) => (
+          <div key={id}>
+            {Object.values(validator).flatMap((chain) =>
+              chain.map((p) => <div key={`error-message-${getRandomId()}`}>{p.message}</div>),
+            )}
+          </div>
+        ))}
+      </div>
+    </NotProduction>
   );
 };

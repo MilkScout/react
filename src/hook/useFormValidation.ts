@@ -1,8 +1,10 @@
 /* eslint-disable no-await-in-loop */
 import { ReactNode, useCallback } from 'react';
 import { useMountedState } from './useMountedState';
-import { ErrorTrans } from '../component';
 import { ErrorMessage, Validation, ValidationError } from '../interface';
+import { getRandomId, isNotProduction } from '../function';
+import { useEffectOnce } from './useEffectOnce';
+import { EVENT_REGISTER_ERROR } from '../variables';
 
 const getDefaultError = <T>(validator: Validation<T>, propertyNames: Array<string>): ValidationError<T> =>
   Object.keys(validator)
@@ -27,6 +29,7 @@ const getDefaultErrorMessage = <T>(validator: Validation<T>, propertyNames: Arra
     ) as ErrorMessage<T>;
 
 export const useFormValidation = <T>(validator: Validation<T>) => {
+  const [validationId] = useMountedState<string>(getRandomId());
   const [formState, setFormState] = useMountedState<{ [value: string]: any }>({} as any);
   const [errorState, setErrorState] = useMountedState<ValidationError<T>>(
     getDefaultError<T>(validator, Object.keys(validator)),
@@ -112,6 +115,12 @@ export const useFormValidation = <T>(validator: Validation<T>) => {
     setErrorState(getDefaultError<T>(validator, Object.keys(validator)));
   }, [setErrorState, validator]);
 
+  useEffectOnce(
+    isNotProduction(() => {
+      window.dispatchEvent(new CustomEvent(EVENT_REGISTER_ERROR, { detail: { id: validationId, validator } }));
+    }),
+  );
+
   return {
     validate,
     errorState,
@@ -119,7 +128,6 @@ export const useFormValidation = <T>(validator: Validation<T>) => {
     setErrorFormState: setFormState,
     getErrorMessage,
     getState,
-    ErrorTrans: ErrorTrans({ validator }),
     resetError,
   };
 };
