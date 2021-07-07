@@ -1,8 +1,8 @@
-import { RefObject, useEffect, useRef } from 'react';
+import { RefObject, useLayoutEffect, useRef } from 'react';
 
 export const useMounted = (): RefObject<boolean> => {
   const componentIsMounted = useRef(true);
-  useEffect(
+  useLayoutEffect(
     () => () => {
       componentIsMounted.current = false;
     },
