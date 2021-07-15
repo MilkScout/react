@@ -4,11 +4,11 @@ import { useEffectOnce, useMountedState } from '../hook';
 import { Validation, ValidationMessage } from '../interface';
 import { EVENT_DEREGISTER_ERROR, EVENT_REGISTER_ERROR, VALIDATION_CONFIG } from '../variables';
 
-export interface ErrorMessageProps {
+export interface ErrorTransMessageProps {
   message?: ValidationMessage<any, any>;
 }
 
-export const ErrorMessage = ({ message: validationMessage }: ErrorMessageProps) => {
+export const ErrorTransMessage = ({ message: validationMessage }: ErrorTransMessageProps) => {
   if (typeof validationMessage === 'function') {
     // set there empty values
     return <>{validationMessage('', {})}</>;
@@ -56,7 +56,7 @@ export const ErrorTrans = () => {
           {Object.entries(errorMessages).map(([id, validator]) => (
             <div key={id}>
               {Object.values(validator).flatMap((chain) =>
-                chain.map((p) => <ErrorMessage key={`error-message-${getRandomId()}`} message={p.message} />),
+                chain.map((p) => <ErrorTransMessage key={`error-message-${getRandomId()}`} message={p.message} />),
               )}
             </div>
           ))}
