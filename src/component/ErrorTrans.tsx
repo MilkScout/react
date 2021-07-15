@@ -21,6 +21,7 @@ export const ErrorTransMessage = ({ message: validationMessage }: ErrorTransMess
 
 export type ErrorEventRegister = CustomEvent<{ id: string; validator: Validation<unknown> }>;
 export type ErrorEventDeregister = CustomEvent<{ id: string }>;
+
 export const ErrorTrans = () => {
   const [errorMessages, setErrorMessages] = useMountedState<{ [key: string]: Validation<any> }>({});
 
@@ -54,10 +55,14 @@ export const ErrorTrans = () => {
       {VALIDATION_CONFIG.addToDom && (
         <div style={{ display: 'none' }}>
           {Object.entries(errorMessages).map(([id, validator]) => (
-            <div key={id}>
-              {Object.values(validator).flatMap((chain) =>
-                chain.map((p) => <ErrorTransMessage key={`error-message-${getRandomId()}`} message={p.message} />),
-              )}
+            <div key={id} data-validation-id={id}>
+              {Object.entries(validator).map(([propertyName, chain]) => (
+                <div key={`${id}-${propertyName}`} data-propery-name={propertyName}>
+                  {chain.map((p) => (
+                    <ErrorTransMessage key={`error-message-${getRandomId()}`} message={p.message} />
+                  ))}
+                </div>
+              ))}
             </div>
           ))}
         </div>
