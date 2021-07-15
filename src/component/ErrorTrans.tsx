@@ -1,24 +1,50 @@
 import React from 'react';
 import { getRandomId } from '../function';
 import { useEffectOnce, useMountedState } from '../hook';
-import { Validation } from '../interface';
-import { EVENT_REGISTER_ERROR, VALIDATION_CONFIG } from '../variables';
+import { Validation, ValidationMessage } from '../interface';
+import { EVENT_DEREGISTER_ERROR, EVENT_REGISTER_ERROR, VALIDATION_CONFIG } from '../variables';
 
-export type ErrorEvent = CustomEvent<{ id: string; validator: Validation<unknown> }>;
+export interface ErrorMessageProps {
+  message?: ValidationMessage<any, any>;
+}
+
+export const ErrorMessage = ({ message: validationMessage }: ErrorMessageProps) => {
+  if (typeof validationMessage === 'function') {
+    // set there empty values
+    return <>{validationMessage('', {})}</>;
+  }
+  if (typeof validationMessage !== 'undefined') {
+    return <>{validationMessage}</>;
+  }
+  return null;
+};
+
+export type ErrorEventRegister = CustomEvent<{ id: string; validator: Validation<unknown> }>;
+export type ErrorEventDeregister = CustomEvent<{ id: string }>;
 export const ErrorTrans = () => {
   const [errorMessages, setErrorMessages] = useMountedState<{ [key: string]: Validation<any> }>({});
 
   // eslint-disable-next-line consistent-return
   useEffectOnce(() => {
     if (VALIDATION_CONFIG.addToDom) {
-      const eventListener = (event: ErrorEvent) => {
+      const mountComponentRegister = (event: ErrorEventRegister) => {
         const { id, validator } = event.detail;
         setErrorMessages((c) => ({ ...c, [id]: validator }));
       };
+      const unMountComponentDeregister = (event: ErrorEventDeregister) => {
+        const { id } = event.detail;
+        setErrorMessages((current) => {
+          const newState = { ...current };
+          delete newState[id];
+          return newState;
+        });
+      };
 
-      window.addEventListener<any>(EVENT_REGISTER_ERROR, eventListener);
+      window.addEventListener<any>(EVENT_REGISTER_ERROR, mountComponentRegister);
+      window.addEventListener<any>(EVENT_DEREGISTER_ERROR, unMountComponentDeregister);
       return () => {
-        window.removeEventListener<any>(EVENT_REGISTER_ERROR, eventListener);
+        window.removeEventListener<any>(EVENT_REGISTER_ERROR, mountComponentRegister);
+        window.removeEventListener<any>(EVENT_DEREGISTER_ERROR, unMountComponentDeregister);
       };
     }
   });
@@ -30,7 +56,7 @@ export const ErrorTrans = () => {
           {Object.entries(errorMessages).map(([id, validator]) => (
             <div key={id}>
               {Object.values(validator).flatMap((chain) =>
-                chain.map((p) => <div key={`error-message-${getRandomId()}`}>{p.message}</div>),
+                chain.map((p) => <ErrorMessage key={`error-message-${getRandomId()}`} message={p.message} />),
               )}
             </div>
           ))}

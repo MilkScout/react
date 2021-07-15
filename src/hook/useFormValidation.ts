@@ -1,10 +1,10 @@
 /* eslint-disable no-await-in-loop */
-import { ReactNode, useCallback } from 'react';
+import { ReactNode, useCallback, useEffect } from 'react';
 import { useMountedState } from './useMountedState';
-import { ErrorMessage, Validation, ValidationError } from '../interface';
+import { ErrorMessage, Validation, ValidationError, ValidationMessage, ValidationObject } from '../interface';
 import { getRandomId } from '../function';
 import { useEffectOnce } from './useEffectOnce';
-import { EVENT_REGISTER_ERROR, VALIDATION_CONFIG } from '../variables';
+import { EVENT_DEREGISTER_ERROR, EVENT_REGISTER_ERROR, VALIDATION_CONFIG } from '../variables';
 
 const getDefaultError = <T>(validator: Validation<T>, propertyNames: Array<string>): ValidationError<T> =>
   Object.keys(validator)
@@ -49,8 +49,8 @@ export const useFormValidation = <T>(validator: Validation<T>) => {
         return true;
       });
       const propertyNames = entries.map(([propertyName]) => propertyName);
-      const errors: any = getDefaultError<T>(validator, propertyNames);
-      const message: any = getDefaultErrorMessage<T>(validator, propertyNames);
+      const errors: ValidationError<any> = getDefaultError<T>(validator, propertyNames);
+      const message: ErrorMessage<any> = getDefaultErrorMessage<T>(validator, propertyNames);
       let valid = true;
 
       for (let index = 0; index < entries.length; index += 1) {
@@ -62,13 +62,18 @@ export const useFormValidation = <T>(validator: Validation<T>) => {
 
         let validationChainResult = true;
         for (let iIndex = 0; iIndex < messAndValFnArray.length; iIndex += 1) {
-          const messAndValFn = messAndValFnArray[iIndex];
+          const messAndValFn: ValidationObject<any, any> = messAndValFnArray[iIndex];
           // result of validation
           const validationResult: boolean = await messAndValFn.validateFn(propertyValue, formState);
           validationChainResult = validationChainResult && validationResult;
 
           if (!validationResult) {
-            message[propertyName] = messAndValFn.message;
+            const validationMessage: ValidationMessage<any, any> = messAndValFn.message;
+            if (typeof validationMessage === 'function') {
+              message[propertyName] = validationMessage(propertyValue, formState);
+            } else if (typeof validationMessage !== 'undefined') {
+              message[propertyName] = validationMessage;
+            }
             break;
           }
         }
@@ -115,11 +120,14 @@ export const useFormValidation = <T>(validator: Validation<T>) => {
     setErrorState(getDefaultError<T>(validator, Object.keys(validator)));
   }, [setErrorState, validator]);
 
-  useEffectOnce(() => {
+  useEffect(() => {
     if (VALIDATION_CONFIG.addToDom) {
       window.dispatchEvent(new CustomEvent(EVENT_REGISTER_ERROR, { detail: { id: validationId, validator } }));
+      return () => {
+        window.dispatchEvent(new CustomEvent(EVENT_DEREGISTER_ERROR, { detail: { id: validationId } }));
+      };
     }
-  });
+  }, []);
 
   return {
     validate,

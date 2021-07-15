@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
 
+export type ValidationMessage<T, D> = ((value: D, state: T) => ReactNode) | ReactNode;
 export type ValidationFn<T, D> = (value: D, state: T) => Promise<boolean> | boolean;
-export type ValidationArray<T, D> = Array<{ message: ReactNode; validateFn: ValidationFn<T, D> }>;
+export type ValidationObject<T, D> = { message?: ValidationMessage<T, D>; validateFn: ValidationFn<T, D> };
+export type ValidationArray<T, D> = Array<ValidationObject<T, D>>;
 
 export type Validation<T> = ValidationChain<Required<T>, keyof Required<T>>;
 export type ValidationChain<T extends { [key: string]: any }, K extends keyof T> = {
