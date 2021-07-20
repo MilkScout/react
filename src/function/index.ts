@@ -10,3 +10,4 @@ export * from './joinNode';
 export * from './compareNumber';
 export * from './isProduction';
 export * from './isNotProduction';
+export * from './noop';
