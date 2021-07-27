@@ -2,8 +2,7 @@
 import { ReactNode, useCallback, useEffect } from 'react';
 import { useMountedState } from './useMountedState';
 import { ErrorMessage, Validation, ValidationError, ValidationMessage, ValidationObject } from '../interface';
-import { getRandomId } from '../function';
-import { useEffectOnce } from './useEffectOnce';
+import { getRandomId, noop } from '../function';
 import { EVENT_DEREGISTER_ERROR, EVENT_REGISTER_ERROR, VALIDATION_CONFIG } from '../variables';
 
 const getDefaultError = <T>(validator: Validation<T>, propertyNames: Array<string>): ValidationError<T> =>
@@ -127,6 +126,7 @@ export const useFormValidation = <T>(validator: Validation<T>) => {
         window.dispatchEvent(new CustomEvent(EVENT_DEREGISTER_ERROR, { detail: { id: validationId } }));
       };
     }
+    return noop;
   }, []);
 
   return {

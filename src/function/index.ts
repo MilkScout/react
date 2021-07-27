@@ -11,3 +11,6 @@ export * from './compareNumber';
 export * from './isProduction';
 export * from './isNotProduction';
 export * from './noop';
+export * from './iife';
+export * from './parseInt';
+export * from './parseFloat';

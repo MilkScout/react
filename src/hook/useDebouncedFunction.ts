@@ -7,29 +7,25 @@ export const useDebounceFunction = (
   milliseconds: number = 250,
   onBeforeDebounce: () => void = DEFAULT_ON_DEBOUNCE,
 ) => {
+  const [run, setRun] = useState<boolean>(false);
   const [, setDebounce] = useState<any>();
-  const [state, setState] = useState<boolean>(false);
 
   useEffect(() => {
-    let mounted = true;
-    if (state) {
-      onBeforeDebounce();
-      setDebounce((current: any) => {
-        window.clearTimeout(current);
-        return window.setTimeout(() => {
-          if (mounted) {
-            fun();
-            setState(false);
-          }
-        }, milliseconds);
-      });
+    if (run) {
+      fun();
+      setRun(false);
     }
-    return () => {
-      mounted = false;
-    };
-  }, [state, milliseconds, onBeforeDebounce, fun]);
+  }, [fun, run, setRun]);
+
+  const trigger = useCallback(() => {
+    onBeforeDebounce();
+    setDebounce((current: any) => {
+      window.clearTimeout(current);
+      return window.setTimeout(() => setRun(true), milliseconds);
+    });
+  }, [onBeforeDebounce, setRun, milliseconds]);
 
   return useCallback(() => {
-    setState(true);
-  }, [setState]);
+    trigger();
+  }, [trigger]);
 };
