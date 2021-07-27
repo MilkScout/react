@@ -17,15 +17,11 @@ export const useDebounceFunction = (
     }
   }, [fun, run, setRun]);
 
-  const trigger = useCallback(() => {
+  return useCallback(() => {
     onBeforeDebounce();
     setDebounce((current: any) => {
       window.clearTimeout(current);
       return window.setTimeout(() => setRun(true), milliseconds);
     });
   }, [onBeforeDebounce, setRun, milliseconds]);
-
-  return useCallback(() => {
-    trigger();
-  }, [trigger]);
 };
