@@ -1,7 +1,14 @@
 /* eslint-disable no-await-in-loop */
 import { ReactNode, useCallback, useEffect } from 'react';
 import { useMountedState } from './useMountedState';
-import { ErrorMessage, Validation, ValidationError, ValidationMessage, ValidationObject } from '../interface';
+import {
+  ErrorMessage,
+  ExternalFormState,
+  Validation,
+  ValidationError,
+  ValidationMessage,
+  ValidationObject,
+} from '../interface';
 import { getRandomId, noop } from '../function';
 import { EVENT_DEREGISTER_ERROR, EVENT_REGISTER_ERROR, VALIDATION_CONFIG } from '../variables';
 
@@ -27,15 +34,22 @@ const getDefaultErrorMessage = <T>(validator: Validation<T>, propertyNames: Arra
       {},
     ) as ErrorMessage<T>;
 
-export const useFormValidation = <T>(validator: Validation<T>) => {
+export const useFormValidation = <T>(validator: Validation<T>, externalFormState?: ExternalFormState) => {
   const [validationId] = useMountedState<string>(getRandomId());
-  const [formState, setFormState] = useMountedState<{ [value: string]: any }>({} as any);
+  const [formState, setFormState] = useMountedState<ExternalFormState>({});
+
   const [errorState, setErrorState] = useMountedState<ValidationError<T>>(
     getDefaultError<T>(validator, Object.keys(validator)),
   );
   const [errorMessage, setErrorMessage] = useMountedState<ErrorMessage<T>>(
     getDefaultErrorMessage<T>(validator, Object.keys(validator)),
   );
+
+  useEffect(() => {
+    if (externalFormState) {
+      setFormState(externalFormState);
+    }
+  }, [setFormState, externalFormState]);
 
   const validate = useCallback(
     async (key?: keyof T): Promise<boolean> => {

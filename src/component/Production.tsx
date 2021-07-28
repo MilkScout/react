@@ -1,8 +1,5 @@
 import React, { PropsWithChildren } from 'react';
+import { when } from '../function';
 
-export const Production = ({ children }: PropsWithChildren<{}>) => {
-  if (process.env.NODE_ENV !== 'production') {
-    return null;
-  }
-  return <>{children}</>;
-};
+export const Production = ({ children }: PropsWithChildren<unknown>) =>
+  when(process.env.NODE_ENV === 'production', <>{children}</>, null);

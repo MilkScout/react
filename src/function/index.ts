@@ -14,3 +14,5 @@ export * from './noop';
 export * from './iife';
 export * from './parseInt';
 export * from './parseFloat';
+export * from './downloadBlob';
+export * from './when';

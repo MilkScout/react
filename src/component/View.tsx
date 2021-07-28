@@ -1,16 +1,9 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, ReactElement } from 'react';
+import { when } from '../function';
 
 export interface ViewProps {
   show: boolean;
-  remove?: boolean;
+  children: ReactElement;
 }
 
-export const View = ({ show, remove = false, children }: PropsWithChildren<ViewProps>) => {
-  if (show) {
-    return <>{children}</>;
-  }
-  if (remove) {
-    return null;
-  }
-  return <div style={{ display: 'none' }}>{children}</div>;
-};
+export const View = ({ show, children }: PropsWithChildren<ViewProps>) => when(show, <>{children}</>, null);
