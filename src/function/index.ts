@@ -16,3 +16,4 @@ export * from './parseInt';
 export * from './parseFloat';
 export * from './downloadBlob';
 export * from './when';
+export * from './delay';
