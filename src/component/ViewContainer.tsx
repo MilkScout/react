@@ -16,7 +16,7 @@ export const ViewContainer = ({
   wrapperEl = <div />,
 }: PropsWithChildren<ViewContainerProps>) => {
   const style = when(show, {}, hideStyle);
-  const wrapperStyle = (wrapperEl as any).style || {};
+  const wrapperStyle = wrapperEl?.props?.style || {};
   return React.cloneElement(wrapperEl, {
     children,
     style: { ...wrapperStyle, ...style },
