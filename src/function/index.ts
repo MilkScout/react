@@ -17,3 +17,5 @@ export * from './parseFloat';
 export * from './downloadBlob';
 export * from './when';
 export * from './delay';
+export * from './formatNumber';
+export * from './formatDate';

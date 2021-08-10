@@ -1,5 +1,6 @@
 import React, { CSSProperties, PropsWithChildren, ReactElement } from 'react';
 import { when } from '../function';
+import { STYLES } from '../variables';
 
 export interface ViewContainerProps {
   show: boolean;
@@ -7,12 +8,10 @@ export interface ViewContainerProps {
   hideStyle?: CSSProperties;
 }
 
-const HIDE_STYLE: CSSProperties = { display: 'none' };
-
 export const ViewContainer = ({
   show,
   children,
-  hideStyle = HIDE_STYLE,
+  hideStyle = STYLES.hide,
   wrapperEl = <div />,
 }: PropsWithChildren<ViewContainerProps>) => {
   const style = when(show, {}, hideStyle);

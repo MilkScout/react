@@ -1,12 +1,14 @@
 import React, { CSSProperties, ReactElement } from 'react';
+import { when } from '../function';
+import { STYLES } from '../variables';
 
 export interface HideProps {
-  show: boolean;
+  show: boolean | undefined;
   children: ReactElement;
+  hideStyle?: CSSProperties;
 }
 
-const hideStyle: CSSProperties = { display: 'none' };
-const showStyle: CSSProperties = {};
-
-export const Hide = ({ show, children }: HideProps) =>
-  React.cloneElement(children, { style: show ? showStyle : hideStyle });
+export const Hide = ({ show, children, hideStyle = STYLES.hide }: HideProps) =>
+  React.cloneElement(children, {
+    style: { ...when(!!children?.props?.style, children?.props?.style, {}), ...when(!!show, {}, hideStyle) },
+  });
