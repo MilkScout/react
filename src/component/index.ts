@@ -6,3 +6,4 @@ export * from './Hide';
 export * from './ViewContainer';
 export * from './FormattedNumber';
 export * from './FormattedDate';
+export * from './Slider';

@@ -11,3 +11,9 @@ export const VALIDATION_CONFIG = {
 export const STYLES: { [name: string]: CSSProperties } = {
   hide: { display: 'none' },
 };
+
+export const SLIDER = {
+  preloadBack: 1,
+  preloadForward: 2,
+  velocityTracking: 0.5,
+};
