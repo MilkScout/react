@@ -1,6 +1,12 @@
 import { when } from './when';
 
-export type DateFormat = 'dd.MM.YYYY' | 'dd.MM.YYYY hh:mm' | 'MM/dd/YYYY' | 'MM/dd/YYYY hh:mm';
+export type DateFormat =
+  | 'dd.MM.YYYY'
+  | 'dd.MM.YYYY hh:mm'
+  | 'MM/dd/YYYY'
+  | 'MM/dd/YYYY hh:mm'
+  | 'dd-MM-YYYY'
+  | 'dd-MM-YYYY hh:mm';
 
 export const formatDate = (date: Date | string, format: DateFormat) => {
   const dateObject = typeof date === 'string' ? new Date(date) : date;
@@ -20,6 +26,8 @@ export const formatDate = (date: Date | string, format: DateFormat) => {
     'dd.MM.YYYY hh:mm': () => `${day}.${month}.${year} ${normalizedHour}:${normalizedMinute}`,
     'MM/dd/YYYY': () => `${month}/${day}/${year}`,
     'MM/dd/YYYY hh:mm': () => `${month}/${day}/${year} ${normalizedHour}:${normalizedMinute}`,
+    'dd-MM-YYYY': () => `${day}-${month}-${year}`,
+    'dd-MM-YYYY hh:mm': () => `${day}-${month}-${year} ${normalizedHour}:${normalizedMinute}`,
   };
 
   return buildFunction[format]();
