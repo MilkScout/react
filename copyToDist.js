@@ -14,6 +14,7 @@ const packageJSONKeys = [
     'author',
     'license',
     'peerDependencies',
+    'dependencies',
 ];
 
 const packageJSON = Object.entries(JSON.parse(fs.readFileSync('package.json').toString()))
