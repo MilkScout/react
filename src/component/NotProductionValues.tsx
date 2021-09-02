@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
-import { getRandomId } from 'src/function/getRandomId';
-import { when } from 'src/function/when';
+import { getRandomId, when } from '../function';
 import { NotProduction } from './NotProduction';
 import { ViewContainer } from './ViewContainer';
 
