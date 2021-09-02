@@ -19,3 +19,4 @@ export * from './when';
 export * from './delay';
 export * from './formatNumber';
 export * from './formatDate';
+export * from './printReactEnv';
