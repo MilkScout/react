@@ -24,7 +24,10 @@ class MultiRef<K, V> {
   };
 }
 
-export const useMultiRef = <KEY, VALUE>() => {
-  const [multiRef] = useMountedState(new MultiRef<KEY, VALUE>());
-  return [multiRef.ref, multiRef.map];
+export const useMultiRef = <K, V>(): {
+  register: (key: K) => RefFn<V>;
+  map: Map<K, V>;
+} => {
+  const [multiRef] = useMountedState(new MultiRef<K, V>());
+  return { register: multiRef.ref, map: multiRef.map };
 };
