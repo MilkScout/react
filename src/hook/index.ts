@@ -6,3 +6,4 @@ export * from './useFormValidation';
 export * from './useMounted';
 export * from './useQueryParams';
 export * from './usePrevious';
+export * from './useMultiRef';
