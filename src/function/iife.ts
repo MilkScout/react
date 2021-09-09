@@ -1,1 +1,1 @@
-export const iife = (fun: () => void | Promise<void>) => fun();
+export const iife = <T>(fun: () => T) => fun();

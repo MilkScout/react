@@ -1,20 +1,29 @@
-export interface DispatchCustomEventOption {
-  bubble: boolean;
-  cancelAble: boolean;
-  details: any;
+import { defined } from './defined';
+
+export interface DispatchCustomEventOption<T> {
+  target?: EventTarget;
+  bubble?: boolean;
+  canBeCancelled?: boolean;
+  detail: T;
 }
-export const DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION: DispatchCustomEventOption = {
+export const DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION: Required<DispatchCustomEventOption<any>> = {
+  target: window.document,
   bubble: true,
-  cancelAble: true,
-  details: undefined,
+  canBeCancelled: true,
+  detail: undefined,
 };
 
-export const dispatchCustomEvent = (
+export const dispatchCustomEvent = <T>(
   eventName: string,
-  options: DispatchCustomEventOption = DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION,
+  options: DispatchCustomEventOption<T> = DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION,
 ) => {
   const customEvent = document.createEvent('CustomEvent');
 
-  customEvent.initCustomEvent(eventName, options.bubble, options.cancelAble, options.details);
-  window.document.dispatchEvent(customEvent);
+  customEvent.initCustomEvent(
+    eventName,
+    defined<boolean>(options.bubble, DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION.bubble),
+    defined<boolean>(options.canBeCancelled, DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION.canBeCancelled),
+    options.detail,
+  );
+  defined<EventTarget>(options.target, DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION.target).dispatchEvent(customEvent);
 };

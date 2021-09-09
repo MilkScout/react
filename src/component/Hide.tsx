@@ -1,5 +1,5 @@
 import React, { CSSProperties, ReactElement } from 'react';
-import { when } from '../function';
+import { when, defined } from '../function';
 import { STYLES } from '../variables';
 
 export interface HideProps {
@@ -10,5 +10,5 @@ export interface HideProps {
 
 export const Hide = ({ show, children, hideStyle = STYLES.hide }: HideProps) =>
   React.cloneElement(children, {
-    style: { ...when(!!children?.props?.style, children?.props?.style, {}), ...when(!!show, {}, hideStyle) },
+    style: { ...defined<CSSProperties>(children?.props?.style, {}), ...when(!!show, {}, hideStyle) },
   });

@@ -1,1 +1,1 @@
-export const required = (value: any): boolean => !!value;
+export const required = (value: any): boolean => typeof value !== 'undefined' && value !== null && value !== '';
