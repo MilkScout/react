@@ -44,3 +44,5 @@ jobs:
           auth_token: ${{ secrets.npm_token }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: show repo
+        run: ls -lisha dist
