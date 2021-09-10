@@ -11,10 +11,14 @@ export const useDebounceFunction = (
   const [, setDebounce] = useState<any>();
 
   useEffect(() => {
-    if (run) {
+    let mounted = true;
+    if (run && mounted) {
       fun();
       setRun(false);
     }
+    return () => {
+      mounted = false;
+    };
   }, [fun, run, setRun]);
 
   return useCallback(() => {
