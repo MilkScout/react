@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
+import { useMountedState } from './useMountedState';
 
 const DEFAULT_ON_DEBOUNCE = () => {};
 
@@ -7,18 +8,14 @@ export const useDebounceFunction = (
   milliseconds: number = 250,
   onBeforeDebounce: () => void = DEFAULT_ON_DEBOUNCE,
 ) => {
-  const [run, setRun] = useState<boolean>(false);
-  const [, setDebounce] = useState<any>();
+  const [run, setRun] = useMountedState<boolean>(false);
+  const [, setDebounce] = useMountedState<any>(undefined);
 
   useEffect(() => {
-    let mounted = true;
-    if (run && mounted) {
+    if (run) {
       fun();
       setRun(false);
     }
-    return () => {
-      mounted = false;
-    };
   }, [fun, run, setRun]);
 
   return useCallback(() => {
