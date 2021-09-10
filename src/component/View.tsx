@@ -1,12 +1,10 @@
-import React, { PropsWithChildren, ReactElement } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { when } from '../function';
-import { NotProduction } from './NotProduction';
-import { ViewContainer } from './ViewContainer';
 import { VALIDATION_CONFIG } from '../variables';
+import { NotProductionValues } from './NotProductionValues';
 
 export interface ViewProps {
   show: boolean | undefined;
-  children: ReactElement;
 }
 
 export const View = ({ show, children }: PropsWithChildren<ViewProps>) =>
@@ -14,11 +12,5 @@ export const View = ({ show, children }: PropsWithChildren<ViewProps>) =>
     !!show,
     <>{children}</>,
     // delete node on production build, for translation
-    <>
-      {VALIDATION_CONFIG.addToDom && (
-        <NotProduction>
-          <ViewContainer show={false}>{children}</ViewContainer>
-        </NotProduction>
-      )}
-    </>,
+    <>{VALIDATION_CONFIG.addToDom && <NotProductionValues nodes={[children]} />}</>,
   );
