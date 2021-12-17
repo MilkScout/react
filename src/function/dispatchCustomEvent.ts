@@ -6,6 +6,7 @@ export interface DispatchCustomEventOption<T> {
   canBeCancelled?: boolean;
   detail: T;
 }
+
 export const DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION: Required<DispatchCustomEventOption<any>> = {
   target: window.document,
   bubble: true,
@@ -17,13 +18,11 @@ export const dispatchCustomEvent = <T>(
   eventName: string,
   options: DispatchCustomEventOption<T> = DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION,
 ) => {
-  const customEvent = document.createEvent('CustomEvent');
+  const customEvent = new CustomEvent(eventName, {
+    bubbles: defined<boolean>(options.bubble, DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION.bubble),
+    cancelable: defined<boolean>(options.canBeCancelled, DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION.canBeCancelled),
+    detail: options.detail,
+  });
 
-  customEvent.initCustomEvent(
-    eventName,
-    defined<boolean>(options.bubble, DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION.bubble),
-    defined<boolean>(options.canBeCancelled, DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION.canBeCancelled),
-    options.detail,
-  );
   defined<EventTarget>(options.target, DEFAULT_DISPATCH_CUSTOM_EVENT_OPTION.target).dispatchEvent(customEvent);
 };

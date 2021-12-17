@@ -13,11 +13,14 @@ const packageJSONKeys = [
     'repository',
     'author',
     'license',
-    'peerDependencies',
+    'dependencies',
 ];
 
 const packageJSON = Object.entries(JSON.parse(fs.readFileSync('package.json').toString()))
     .filter(([key]) => packageJSONKeys.indexOf(key) > -1)
     .reduce((prev, [key, value]) => ({...prev, [key]: value}), {});
+
+//delete react
+delete packageJSON.dependencies.react
 
 fs.writeFileSync(path.join(DIST_FOLDER, 'package.json'), JSON.stringify(packageJSON, null, 2))

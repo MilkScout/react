@@ -1,23 +1,19 @@
 {
   "name": "@milkscout/react",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "main": "index.js",
   "repository": "git@github.com:MilkScout/react.git",
   "author": "Michael Mannseicher <m.mansi1@gmx.net>",
   "license": "MIT",
   "scripts": {
     "build": "tsc --build \"./tsconfig.json\"",
-    "postbuild": "node copyToDist.js",
+    "postbuild": "node copyToDist.js && cd dist && yarn install",
     "prebuild": "npx st-rm-rf dist"
   },
   "dependencies": {
     "dompurify": "^2.3.1",
     "html-react-parser": "^1.2.8",
     "react": "^17.0.2"
-  },
-  "peerDependencies": {
-    "dompurify": "^2.3.1",
-    "html-react-parser": "^1.2.8"
   },
   "devDependencies": {
     "@types/dompurify": "^2.2.3",

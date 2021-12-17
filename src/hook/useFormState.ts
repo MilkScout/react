@@ -17,20 +17,12 @@ export const useFormState = <T>(initState: T): UseFormStateResponse<T> => {
     (dispatch: HandleValues<T>) => {
       setFormState((c) => {
         let values: Partial<T>;
-
         if (typeof dispatch === 'function') {
           values = dispatch(c);
         } else {
           values = dispatch;
         }
-
-        const newState: any = { ...c };
-        const objectKeys = Object.keys(values);
-        for (let index = 0; index < objectKeys.length; index += 1) {
-          const key = objectKeys[index];
-          newState[key] = (values as any)[key];
-        }
-        return newState;
+        return { ...c, ...values };
       });
     },
     [setFormState],
